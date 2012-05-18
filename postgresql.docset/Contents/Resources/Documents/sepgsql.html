@@ -9,7 +9,7 @@ CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REV="MADE"
 HREF="mailto:pgsql-docs@postgresql.org"><LINK
 REL="HOME"
-TITLE="PostgreSQL 9.1.1 Documentation"
+TITLE="PostgreSQL 9.1.3 Documentation"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="Additional Supplied Modules"
@@ -26,7 +26,7 @@ HREF="stylesheet.css"><META
 HTTP-EQUIV="Content-Type"
 CONTENT="text/html; charset=ISO-8859-1"><META
 NAME="creation"
-CONTENT="2011-09-22T22:13:27"></HEAD
+CONTENT="2012-02-23T23:09:00"></HEAD
 ><BODY
 CLASS="SECT1"
 ><DIV
@@ -44,7 +44,7 @@ ALIGN="center"
 VALIGN="bottom"
 ><A
 HREF="index.html"
->PostgreSQL 9.1.1 Documentation</A
+>PostgreSQL 9.1.3 Documentation</A
 ></TH
 ></TR
 ><TR
@@ -63,9 +63,9 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="top"
 ><A
-TITLE="Additional Supplied Modules"
 HREF="contrib.html"
->Fast Backward</A
+ACCESSKEY="U"
+>Up</A
 ></TD
 ><TD
 WIDTH="60%"
@@ -73,16 +73,7 @@ ALIGN="center"
 VALIGN="bottom"
 >Appendix F. Additional Supplied Modules</TD
 ><TD
-WIDTH="10%"
-ALIGN="right"
-VALIGN="top"
-><A
-TITLE="Additional Supplied Modules"
-HREF="contrib.html"
->Fast Forward</A
-></TD
-><TD
-WIDTH="10%"
+WIDTH="20%"
 ALIGN="right"
 VALIGN="top"
 ><A
@@ -108,7 +99,7 @@ NAME="SEPGSQL"
 >  <TT
 CLASS="FILENAME"
 >sepgsql</TT
-> is a loadable module which supports label-based
+> is a loadable module that supports label-based
   mandatory access control (MAC) based on <SPAN
 CLASS="PRODUCTNAME"
 >SELinux</SPAN
@@ -134,8 +125,8 @@ ALIGN="CENTER"
 ><TD
 ALIGN="LEFT"
 ><P
->     This implementation has signification limitations, and does not enforce
-     mandatory access control for all actions.  See
+>     The current implementation has significant limitations, and does not
+     enforce mandatory access control for all actions.  See
      <A
 HREF="sepgsql.html#SEPGSQL-LIMITATIONS"
 >Section F.38.6</A
@@ -172,8 +163,8 @@ CLASS="PRODUCTNAME"
 >PostgreSQL</SPAN
 > to function as a user-space object
    manager.  Each table or function access initiated by a DML query will be
-   checked against the system security policy.  This check is an additional to
-   the usual permissions checking performed by
+   checked against the system security policy.  This check is in addition to
+   the usual SQL permissions checking performed by
    <SPAN
 CLASS="PRODUCTNAME"
 >PostgreSQL</SPAN
@@ -194,7 +185,7 @@ CLASS="LITERAL"
    to be performed.  Since these labels can be applied to any sort of object,
    access control decisions for objects stored within the database can be
    (and, with this module, are) subjected to the same general criteria used
-   for objects of any other type (e.g. files).  This design is intended to
+   for objects of any other type, such as files.  This design is intended to
    allow a centralized security policy to protect information assets
    independent of the particulars of how those assets are stored.
   </P
@@ -215,27 +206,27 @@ NAME="SEPGSQL-INSTALLATION"
 >F.38.2. Installation</A
 ></H2
 ><P
->    This module can only be used on <SPAN
+>    <TT
+CLASS="FILENAME"
+>sepgsql</TT
+> can only be used on <SPAN
 CLASS="PRODUCTNAME"
 >Linux</SPAN
-> 2.6.28
-    or higher with <SPAN
+>
+    2.6.28 or higher with <SPAN
 CLASS="PRODUCTNAME"
 >SELinux</SPAN
-> enabled.  It is not
-    available on any other platform, and must be explicitly enabled using
-    <TT
-CLASS="LITERAL"
->--with-selinux</TT
->.  You will also need <SPAN
+> enabled.
+    It is not available on any other platform.  You will also need
+    <SPAN
 CLASS="PRODUCTNAME"
 >libselinux</SPAN
->
-    2.0.93 or higher and <SPAN
+> 2.0.93 or higher and
+    <SPAN
 CLASS="PRODUCTNAME"
 >selinux-policy</SPAN
-> 3.9.13 or higher
-    (some distributions may backport the necessary rules into older policy
+> 3.9.13 or higher (although some
+    distributions may backport the necessary rules into older policy
     versions).
   </P
 ><P
@@ -246,7 +237,7 @@ CLASS="COMMAND"
    <SPAN
 CLASS="PRODUCTNAME"
 >SELinux</SPAN
->.
+>.  A typical display is:
 </P><PRE
 CLASS="SCREEN"
 >$ sestatus
@@ -264,15 +255,33 @@ CLASS="PRODUCTNAME"
    that product up first before installing this module.
   </P
 ><P
->   To use this module, you must add include <TT
+>   To build this module, include the option <TT
+CLASS="LITERAL"
+>--with-selinux</TT
+> in
+   your PostgreSQL <TT
+CLASS="LITERAL"
+>configure</TT
+> command.  Be sure that the
+   <TT
+CLASS="FILENAME"
+>libselinux-devel</TT
+> RPM is installed at build time.
+  </P
+><P
+>   To use this module, you must include <TT
 CLASS="LITERAL"
 >sepgsql</TT
 >
-   in <A
+   in the <A
 HREF="runtime-config-resource.html#GUC-SHARED-PRELOAD-LIBRARIES"
 >shared_preload_libraries</A
->.  The module will not
-   function if loaded in any other manner.  Once the module is loaded, you
+> parameter in
+   <TT
+CLASS="FILENAME"
+>postgresql.conf</TT
+>.  The module will not function correctly
+   if loaded in any other manner.  Once the module is loaded, you
    should execute <TT
 CLASS="FILENAME"
 >sepgsql.sql</TT
@@ -281,45 +290,50 @@ CLASS="FILENAME"
    assign initial security labels.
   </P
 ><P
->   The following instructions that assume your installation is under the
-   <TT
+>   Here is an example showing how to initialize a fresh database cluster
+   with <TT
 CLASS="FILENAME"
->/usr/local/pgsql</TT
-> directory and the database cluster is
-   under the <TT
-CLASS="FILENAME"
->/path/to/database</TT
-> directory. Adjust the paths
-   shown below as appropriate for your installation.
+>sepgsql</TT
+> functions and security labels installed.
+   Adjust the paths shown as appropriate for your installation:
   </P
 ><PRE
 CLASS="SCREEN"
->$ export PGDATA=/path/to/database
+>$ export PGDATA=/path/to/data/directory
 $ initdb
 $ vi $PGDATA/postgresql.conf
+  change
+    #shared_preload_libraries = ''                # (change requires restart)
+  to
+    shared_preload_libraries = 'sepgsql'          # (change requires restart)
 $ for DBNAME in template0 template1 postgres; do
-  postgres --single -F -O -c exit_on_error=true $DBNAME \
-      &lt; /usr/local/pgsql/share/contrib/sepgsql.sql &gt; /dev/null
+    postgres --single -F -c exit_on_error=true $DBNAME \
+      &lt;/usr/local/pgsql/share/contrib/sepgsql.sql &gt;/dev/null
   done</PRE
+><P
+>   Please note that you may see some or all of the following notifications
+   depending on the particular versions you have of
+   <SPAN
+CLASS="PRODUCTNAME"
+>libselinux</SPAN
+> and <SPAN
+CLASS="PRODUCTNAME"
+>selinux-policy</SPAN
+>:
+</P><PRE
+CLASS="SCREEN"
+>/etc/selinux/targeted/contexts/sepgsql_contexts:  line 33 has invalid object type db_blobs
+/etc/selinux/targeted/contexts/sepgsql_contexts:  line 36 has invalid object type db_language
+/etc/selinux/targeted/contexts/sepgsql_contexts:  line 37 has invalid object type db_language
+/etc/selinux/targeted/contexts/sepgsql_contexts:  line 38 has invalid object type db_language
+/etc/selinux/targeted/contexts/sepgsql_contexts:  line 39 has invalid object type db_language
+/etc/selinux/targeted/contexts/sepgsql_contexts:  line 40 has invalid object type db_language</PRE
+><P>
+   These messages are harmless and should be ignored.
+  </P
 ><P
 >   If the installation process completes without error, you can now start the
    server normally.
-  </P
-><P
->   Please note that you may see the following notifications depending on
-   the combination of a particular version of <SPAN
-CLASS="PRODUCTNAME"
->libselinux</SPAN
->
-   and <SPAN
-CLASS="PRODUCTNAME"
->selinux-policy</SPAN
->.
-</P><PRE
-CLASS="SCREEN"
->/etc/selinux/targeted/contexts/sepgsql_contexts:  line 33 has invalid object type db_blobs</PRE
-><P>
-   This message is harmless and may be safely ignored.
   </P
 ></DIV
 ><DIV
@@ -335,45 +349,71 @@ NAME="SEPGSQL-REGRESSION"
 CLASS="PRODUCTNAME"
 >SELinux</SPAN
 >, running the
-   regression tests for this module requires several additional configuration
-   steps.
+   regression tests for <TT
+CLASS="FILENAME"
+>sepgsql</TT
+> requires several extra
+   configuration steps, some of which must be done as root.
+   The regression tests will not be run by an ordinary
+   <TT
+CLASS="LITERAL"
+>make check</TT
+> or <TT
+CLASS="LITERAL"
+>make installcheck</TT
+> command; you must
+   set up the configuration and then invoke the test script manually.
+   The tests must be run in the <TT
+CLASS="FILENAME"
+>contrib/sepgsql</TT
+> directory
+   of a configured PostgreSQL build tree.  Although they require a build tree,
+   the tests are designed to be executed against an installed server,
+   that is they are comparable to <TT
+CLASS="LITERAL"
+>make installcheck</TT
+> not
+   <TT
+CLASS="LITERAL"
+>make check</TT
+>.
   </P
 ><P
->   First, set up <SPAN
-CLASS="PRODUCTNAME"
->sepgsql</SPAN
-> according to
-   the <A
+>   First, set up <TT
+CLASS="FILENAME"
+>sepgsql</TT
+> in a working database
+   according to the instructions in <A
 HREF="sepgsql.html#SEPGSQL-INSTALLATION"
 >Section F.38.2</A
->.  The regression test is
-   intended to be run on a system with a working SE-Linux implementation.
-   The current operating system user must be able to connect to the database
-   as superuser without authentication.
+>.
+   Note that the current operating system user must be able to connect to the
+   database as superuser without password authentication.
   </P
 ><P
 >   Second, build and install the policy package for the regression test.
    The <TT
 CLASS="FILENAME"
->sepgsql-regtest.pp</TT
-> is a special purpose policy package
+>sepgsql-regtest</TT
+> policy is a special purpose policy package
    which provides a set of rules to be allowed during the regression tests.
    It should be built from the policy source file
-   (<TT
+   <TT
 CLASS="FILENAME"
 >sepgsql-regtest.te</TT
->), which is normally done using
+>, which is done using
    <TT
 CLASS="COMMAND"
 >make</TT
->.  You will need to locate the appropriate
+> with a Makefile supplied by SELinux.
+   You will need to locate the appropriate
    Makefile on your system; the path shown below is only an example.
-   Once built, you can install this policy package using the
+   Once built, install this policy package using the
    <TT
 CLASS="COMMAND"
 >semodule</TT
-> command, which links supplied policy packages and
-   loads them into the kernel space.  If this package is correctly installed,
+> command, which loads supplied policy packages
+   into the kernel.  If the package is correctly installed,
    <TT
 CLASS="LITERAL"
 ><TT
@@ -381,59 +421,46 @@ CLASS="COMMAND"
 >semodule</TT
 > -l</TT
 > should list sepgsql-regtest as an
-   available policy package.
+   available policy package:
   </P
 ><PRE
 CLASS="SCREEN"
->$ make -C ./contrib/sepgsql -f /usr/share/selinux/devel/Makefile
-$ su
-# semodule -u ./contrib/sepgsql/sepgsql-regtest.pp
-# semodule -l
-    :
-sepgsql-regtest 1.03
-    :</PRE
+>$ cd .../contrib/sepgsql
+$ make -f /usr/share/selinux/devel/Makefile
+$ sudo semodule -u sepgsql-regtest.pp
+$ sudo semodule -l | grep sepgsql
+sepgsql-regtest 1.03</PRE
 ><P
 >   Third, turn on <TT
 CLASS="LITERAL"
 >sepgsql_regression_test_mode</TT
 >.
-   We don't enable all the rules in the <TT
+   We don't enable all the rules in <TT
 CLASS="FILENAME"
->sepgsql-regtest.pp</TT
+>sepgsql-regtest</TT
 >
    by default, for your system's safety.
    The <TT
 CLASS="LITERAL"
 >sepgsql_regression_test_mode</TT
-> parameter is associated
-   with rules to launch regression test.
-   It can be turned on using <TT
+> parameter enables
+   the rules needed to launch the regression tests.
+   It can be turned on using the <TT
 CLASS="COMMAND"
 >setsebool</TT
-> command.
+> command:
   </P
 ><PRE
 CLASS="SCREEN"
->$ su
-# setsebool sepgsql_regression_test_mode on
-# getsebool sepgsql_regression_test_mode
+>$ sudo setsebool sepgsql_regression_test_mode on
+$ getsebool sepgsql_regression_test_mode
 sepgsql_regression_test_mode --&#62; on</PRE
 ><P
->   Last, kick the regression test from the <TT
-CLASS="LITERAL"
->unconfined_t</TT
-> domain.
-  </P
-><P
->   The <TT
-CLASS="COMMAND"
->id</TT
-> command tells us the current working domain.
-   Confirm your shell is now performing with the <TT
+>   Fourth, verify your shell is operating in the <TT
 CLASS="LITERAL"
 >unconfined_t</TT
 >
-   domain as follows.
+   domain:
   </P
 ><PRE
 CLASS="SCREEN"
@@ -447,33 +474,39 @@ HREF="sepgsql.html#SEPGSQL-RESOURCES"
    working domain, if necessary.
   </P
 ><P
->   If <TT
-CLASS="COMMAND"
->pg_regress</TT
-> fails to launch the <TT
-CLASS="COMMAND"
->psql</TT
-> command,
-   you may need to ensure that the <TT
-CLASS="COMMAND"
->psql</TT
-> command is labeled
-   as <TT
-CLASS="LITERAL"
->bin_t</TT
->.  If it is not, the <TT
-CLASS="COMMAND"
->restorecon</TT
-> command can
-   often be used to fix up security labels within the
-   <SPAN
-CLASS="PRODUCTNAME"
->PostgreSQL</SPAN
-> installation directory.
+>   Finally, run the regression test script:
   </P
 ><PRE
 CLASS="SCREEN"
->$ restorecon -R /usr/local/pgsql/</PRE
+>$ ./test_sepgsql</PRE
+><P
+>   This script will attempt to verify that you have done all the configuration
+   steps correctly, and then it will run the regression tests for the
+   <TT
+CLASS="FILENAME"
+>sepgsql</TT
+> module.
+  </P
+><P
+>   After completing the tests, it's recommended you disable
+   the <TT
+CLASS="LITERAL"
+>sepgsql_regression_test_mode</TT
+> parameter:
+  </P
+><PRE
+CLASS="SCREEN"
+>$ sudo setsebool sepgsql_regression_test_mode off</PRE
+><P
+>   You might prefer to remove the <TT
+CLASS="FILENAME"
+>sepgsql-regtest</TT
+> policy
+   entirely:
+  </P
+><PRE
+CLASS="SCREEN"
+>$ sudo semodule -r sepgsql-regtest</PRE
 ></DIV
 ><DIV
 CLASS="SECT2"
@@ -501,9 +534,9 @@ CLASS="TYPE"
 >)</DT
 ><DD
 ><P
->      This parameter enables <SPAN
-CLASS="PRODUCTNAME"
->SE-PostgreSQL</SPAN
+>      This parameter enables <TT
+CLASS="FILENAME"
+>sepgsql</TT
 > to function
       in permissive mode, regardless of the system setting.
       The default is off.
@@ -514,11 +547,11 @@ CLASS="FILENAME"
       file or on the server command line.
      </P
 ><P
->      When this parameter is on, <SPAN
-CLASS="PRODUCTNAME"
->SE-PostgreSQL</SPAN
+>      When this parameter is on, <TT
+CLASS="FILENAME"
+>sepgsql</TT
 > functions
-      in permissive mode, even if the platform system is working in enforcing
+      in permissive mode, even if SELinux in general is working in enforcing
       mode.  This parameter is primarily useful for testing purposes.
      </P
 ></DD
@@ -535,9 +568,10 @@ CLASS="TYPE"
 >)</DT
 ><DD
 ><P
->      This parameter enables the printing of audit messages independent from
-      the policy setting.
-      The default is off (according to the security policy setting).
+>      This parameter enables the printing of audit messages regardless of
+      the system policy settings.
+      The default is off, which means that messages will be printed according
+      to the system settings.
      </P
 ><P
 >      The security policy of <SPAN
@@ -569,7 +603,7 @@ CLASS="SECT3"
 ><H3
 CLASS="SECT3"
 ><A
-NAME="AEN135931"
+NAME="AEN137315"
 >F.38.5.1. Controlled Object Classes</A
 ></H3
 ><P
@@ -577,8 +611,9 @@ NAME="AEN135931"
 CLASS="PRODUCTNAME"
 >SELinux</SPAN
 > describes all the access
-    control rules as a relationship between a subject entity (typically,
-    it is a client of database) and an object entity, each of which is
+    control rules as relationships between a subject entity (typically,
+    a client of the database) and an object entity (such as a database
+    object), each of which is
     identified by a security label.  If access to an unlabelled object is
     attempted, the object is treated as if it were assigned the label
     <TT
@@ -587,17 +622,17 @@ CLASS="LITERAL"
 >.
    </P
 ><P
->    Currently, <SPAN
-CLASS="PRODUCTNAME"
->sepgsql</SPAN
+>    Currently, <TT
+CLASS="FILENAME"
+>sepgsql</TT
 > allows security labels to be
     assigned to schemas, tables, columns, sequences, views, and functions.
-    When <SPAN
-CLASS="PRODUCTNAME"
->sepgsql</SPAN
+    When <TT
+CLASS="FILENAME"
+>sepgsql</TT
 > is in use, security labels are
     automatically assigned to supported database objects at creation time.
-    This label is called as a default security label, being decided according
+    This label is called a default security label, and is decided according
     to the system security policy, which takes as input the creator's label
     and the label assigned to the new object's parent object.
    </P
@@ -605,9 +640,9 @@ CLASS="PRODUCTNAME"
 >    A new database object basically inherits the security label of the parent
     object, except when the security policy has special rules known as
     type-transition rules, in which case a different label may be applied.
-    For schemas, the parent object is the current database; for columns, it
-    is the corresponding table; for tables, sequences, views, and functions,
-    it is the containing schema.
+    For schemas, the parent object is the current database; for tables,
+    sequences, views, and functions, it is the containing schema; for columns,
+    it is the containing table.
    </P
 ></DIV
 ><DIV
@@ -615,7 +650,7 @@ CLASS="SECT3"
 ><H3
 CLASS="SECT3"
 ><A
-NAME="AEN135940"
+NAME="AEN137324"
 >F.38.5.2. DML Permissions</A
 ></H3
 ><P
@@ -633,7 +668,7 @@ CLASS="LITERAL"
 CLASS="LITERAL"
 >db_table:delete</TT
 > is
-    checked for all the referenced target tables depending on the sort of
+    checked for all the referenced target tables depending on the kind of
     statement;
     in addition, <TT
 CLASS="LITERAL"
@@ -650,15 +685,14 @@ CLASS="LITERAL"
     of <TT
 CLASS="LITERAL"
 >UPDATE</TT
->, and so on.
-   </P
-><P
-></P><PRE
+>, and so on.  For example, consider:
+
+</P><PRE
 CLASS="SYNOPSIS"
 >UPDATE t1 SET x = 2, y = md5sum(y) WHERE z = 100;</PRE
 ><P>
 
-    In this case, we must have <TT
+    In this case we must have <TT
 CLASS="LITERAL"
 >db_table:select</TT
 > in addition to
@@ -676,12 +710,6 @@ CLASS="LITERAL"
     checked for each referenced column.
    </P
 ><P
->    The client must be allowed to access all referenced tables and
-    columns, even if they originated from views which were then expanded,
-    so that we apply consistent access control rules independent of the manner
-    in which the table contents are referenced.
-   </P
-><P
 >    For columns, <TT
 CLASS="LITERAL"
 >db_column:select</TT
@@ -689,18 +717,16 @@ CLASS="LITERAL"
     not only the columns being read using <TT
 CLASS="LITERAL"
 >SELECT</TT
->, but being
+>, but those being
     referenced in other DML statements.
-   </P
-><P
->    Of course, it also checks <TT
+    Of course, it also checks <TT
 CLASS="LITERAL"
 >db_column:update</TT
 > or
     <TT
 CLASS="LITERAL"
 >db_column:insert</TT
-> on the column being modified by
+> on columns being modified by
     <TT
 CLASS="LITERAL"
 >UPDATE</TT
@@ -717,26 +743,26 @@ CLASS="SYNOPSIS"
     In this case, it checks <TT
 CLASS="LITERAL"
 >db_column:update</TT
-> on
-    the <TT
+> on the column
+    <TT
 CLASS="LITERAL"
 >t1.x</TT
 > being updated, <TT
 CLASS="LITERAL"
 >db_column:{select update}</TT
 >
-    on the <TT
+    on the column <TT
 CLASS="LITERAL"
 >t1.y</TT
-> being updated and referenced,
-    and <TT
+> being updated and referenced, and
+    <TT
 CLASS="LITERAL"
 >db_column:select</TT
-> on the <TT
+> on the column <TT
 CLASS="LITERAL"
 >t1.z</TT
-> being only
-    referenced in the <TT
+>, since that is
+    only referenced in the <TT
 CLASS="LITERAL"
 >WHERE</TT
 > clause.
@@ -765,24 +791,30 @@ CLASS="LITERAL"
 >    For views, <TT
 CLASS="LITERAL"
 >db_view:expand</TT
-> shall be checked, then any other
-    corresponding permissions shall be also checked on the objects being
+> will be checked, then any other
+    required permissions will be checked on the objects being
     expanded from the view, individually.
    </P
 ><P
 >    For functions, <TT
 CLASS="LITERAL"
 >db_procedure:{execute}</TT
-> is defined, but not
+> is defined, but is not
     checked in this version.
+   </P
+><P
+>    The client must be allowed to access all referenced tables and
+    columns, even if they originated from views which were then expanded,
+    so that we apply consistent access control rules independent of the manner
+    in which the table contents are referenced.
    </P
 ><P
 >    The default database privilege system allows database superusers to
     modify system catalogs using DML commands, and reference or modify
     toast tables.  These operations are prohibited when
-    <SPAN
-CLASS="PRODUCTNAME"
->sepgsql</SPAN
+    <TT
+CLASS="FILENAME"
+>sepgsql</TT
 > is enabled.
    </P
 ></DIV
@@ -791,30 +823,30 @@ CLASS="SECT3"
 ><H3
 CLASS="SECT3"
 ><A
-NAME="AEN135986"
+NAME="AEN137368"
 >F.38.5.3. DDL Permissions</A
 ></H3
 ><P
->    On <A
+>    When <A
 HREF="sql-security-label.html"
 >SECURITY LABEL</A
-> command, <TT
+> is executed, <TT
 CLASS="LITERAL"
 >setattr</TT
-> and
-    <TT
+>
+    and <TT
 CLASS="LITERAL"
 >relabelfrom</TT
-> shall be checked on the object being relabeled
-    with an old security label, then <TT
+> will be checked on the object being relabeled
+    with its old security label, then <TT
 CLASS="LITERAL"
 >relabelto</TT
-> on the supplied
+> with the supplied
     new security label.
    </P
 ><P
 >    In the case where multiple label providers are installed and the user tries
-    to set a security label, but is not managed by <SPAN
+    to set a security label, but it is not managed by <SPAN
 CLASS="PRODUCTNAME"
 >SELinux</SPAN
 >,
@@ -822,7 +854,7 @@ CLASS="PRODUCTNAME"
 CLASS="LITERAL"
 >setattr</TT
 > should be checked here.
-    This is currently not checked due to implementation restrictions.
+    This is currently not done due to implementation restrictions.
    </P
 ></DIV
 ><DIV
@@ -830,8 +862,8 @@ CLASS="SECT3"
 ><H3
 CLASS="SECT3"
 ><A
-NAME="AEN135996"
->F.38.5.4. Trusted Procedure</A
+NAME="AEN137378"
+>F.38.5.4. Trusted Procedures</A
 ></H3
 ><P
 >    Trusted procedures are similar to security definer functions or set-uid
@@ -886,9 +918,9 @@ CLASS="LITERAL"
     directly, but a trusted procedure <TT
 CLASS="LITERAL"
 >show_credit</TT
-> enables us
-    to print the credit card number of customers with some of the digits masked
-    out.
+> allows him
+    to print the credit card numbers of customers with some of the digits
+    masked out.
    </P
 ></DIV
 ><DIV
@@ -896,7 +928,7 @@ CLASS="SECT3"
 ><H3
 CLASS="SECT3"
 ><A
-NAME="AEN136006"
+NAME="AEN137388"
 >F.38.5.5. Miscellaneous</A
 ></H3
 ><P
@@ -922,17 +954,6 @@ NAME="SEPGSQL-LIMITATIONS"
 CLASS="VARIABLELIST"
 ><DL
 ><DT
->Userspace access vector cache</DT
-><DD
-><P
->      <SPAN
-CLASS="PRODUCTNAME"
->sepgsql</SPAN
-> does not yet support an access vector cache.
-      This would likely improve performance.
-     </P
-></DD
-><DT
 >Data Definition Language (DDL) Permissions</DT
 ><DD
 ><P
@@ -954,9 +975,9 @@ CLASS="PRODUCTNAME"
 CLASS="PRODUCTNAME"
 >PostgreSQL</SPAN
 > does not support row-level access; therefore,
-      <SPAN
-CLASS="PRODUCTNAME"
->sepgsql</SPAN
+      <TT
+CLASS="FILENAME"
+>sepgsql</TT
 > does not support it either.
      </P
 ></DD
@@ -964,14 +985,14 @@ CLASS="PRODUCTNAME"
 >Covert channels</DT
 ><DD
 ><P
->      <SPAN
-CLASS="PRODUCTNAME"
->sepgsql</SPAN
-> never tries to hide existence of
-      a certain object, even if the user is not allowed to the reference.
+>      <TT
+CLASS="FILENAME"
+>sepgsql</TT
+> does not try to hide the existence of
+      a certain object, even if the user is not allowed to reference it.
       For example, we can infer the existence of an invisible object as
       a result of primary key conflicts, foreign key violations, and so on,
-      even if we cannot reference contents of these objects.  The existence
+      even if we cannot obtain the contents of the object.  The existence
       of a top secret table cannot be hidden; we only hope to conceal its
       contents.
      </P
@@ -1000,7 +1021,7 @@ TARGET="_top"
 ></DT
 ><DD
 ><P
->      This wiki page provides a brief-overview, security design, architecture,
+>      This wiki page provides a brief overview, security design, architecture,
       administration and upcoming features.
      </P
 ></DD

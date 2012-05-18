@@ -9,7 +9,7 @@ CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REV="MADE"
 HREF="mailto:pgsql-docs@postgresql.org"><LINK
 REL="HOME"
-TITLE="PostgreSQL 9.1.1 Documentation"
+TITLE="PostgreSQL 9.1.3 Documentation"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="SQL Commands"
@@ -26,7 +26,7 @@ HREF="stylesheet.css"><META
 HTTP-EQUIV="Content-Type"
 CONTENT="text/html; charset=ISO-8859-1"><META
 NAME="creation"
-CONTENT="2011-09-22T22:13:27"></HEAD
+CONTENT="2012-02-23T23:09:00"></HEAD
 ><BODY
 CLASS="REFENTRY"
 ><DIV
@@ -44,7 +44,7 @@ ALIGN="center"
 VALIGN="bottom"
 ><A
 HREF="index.html"
->PostgreSQL 9.1.1 Documentation</A
+>PostgreSQL 9.1.3 Documentation</A
 ></TH
 ></TR
 ><TR
@@ -63,9 +63,9 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="top"
 ><A
-TITLE="SECURITY LABEL"
-HREF="sql-security-label.html"
->Fast Backward</A
+HREF="sql-commands.html"
+ACCESSKEY="U"
+>Up</A
 ></TD
 ><TD
 WIDTH="60%"
@@ -73,16 +73,7 @@ ALIGN="center"
 VALIGN="bottom"
 ></TD
 ><TD
-WIDTH="10%"
-ALIGN="right"
-VALIGN="top"
-><A
-TITLE="SELECT INTO"
-HREF="sql-selectinto.html"
->Fast Forward</A
-></TD
-><TD
-WIDTH="10%"
+WIDTH="20%"
 ALIGN="right"
 VALIGN="top"
 ><A
@@ -104,7 +95,7 @@ NAME="SQL-SELECT"
 ><DIV
 CLASS="REFNAMEDIV"
 ><A
-NAME="AEN74207"
+NAME="AEN74253"
 ></A
 ><H2
 >Name</H2
@@ -112,7 +103,7 @@ NAME="AEN74207"
 ><DIV
 CLASS="REFSYNOPSISDIV"
 ><A
-NAME="AEN74219"
+NAME="AEN74265"
 ></A
 ><H2
 >Synopsis</H2
@@ -403,7 +394,7 @@ CLASS="REPLACEABLE"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN74271"
+NAME="AEN74317"
 ></A
 ><H2
 >Description</H2
@@ -747,7 +738,7 @@ CLASS="LITERAL"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN74351"
+NAME="AEN74397"
 ></A
 ><H2
 >Parameters</H2
@@ -2918,8 +2909,30 @@ CLASS="LITERAL"
 >.
    </P
 ><P
->    Character-string data is sorted according to the locale-specific
-    collation order that was established when the database was created.
+>    Character-string data is sorted according to the collation that applies
+    to the column being sorted.  That can be overridden at need by including
+    a <TT
+CLASS="LITERAL"
+>COLLATE</TT
+> clause in the
+    <TT
+CLASS="REPLACEABLE"
+><I
+>expression</I
+></TT
+>, for example
+    <TT
+CLASS="LITERAL"
+>ORDER BY mycolumn COLLATE "en_US"</TT
+>.
+    For more information see <A
+HREF="sql-expressions.html#SQL-SYNTAX-COLLATE-EXPRS"
+>Section 4.2.10</A
+> and
+    <A
+HREF="collation.html"
+>Section 22.2</A
+>.
    </P
 ></DIV
 ><DIV
@@ -2952,7 +2965,8 @@ CLASS="REPLACEABLE"
 >start</I
 ></TT
 ></PRE
-><P><TT
+><P>
+    <TT
 CLASS="REPLACEABLE"
 ><I
 >count</I
@@ -3021,18 +3035,29 @@ CLASS="REPLACEABLE"
 ></TT
 > ] { ROW | ROWS } ONLY</PRE
 ><P>
-    According to the standard, the <TT
-CLASS="LITERAL"
->OFFSET</TT
-> clause must come
-    before the <TT
+    In this syntax, to write anything except a simple integer constant for
+    <TT
+CLASS="REPLACEABLE"
+><I
+>start</I
+></TT
+> or <TT
+CLASS="REPLACEABLE"
+><I
+>count</I
+></TT
+>, you must write parentheses
+    around it.
+    If <TT
+CLASS="REPLACEABLE"
+><I
+>count</I
+></TT
+> is
+    omitted in a <TT
 CLASS="LITERAL"
 >FETCH</TT
-> clause if both are present; but
-    <SPAN
-CLASS="PRODUCTNAME"
->PostgreSQL</SPAN
-> is laxer and allows either order.
+> clause, it defaults to 1.
     <TT
 CLASS="LITERAL"
 >ROW</TT
@@ -3048,29 +3073,19 @@ CLASS="LITERAL"
 CLASS="LITERAL"
 >NEXT</TT
 > are noise words that don't influence
-    the effects of these clauses.  In this syntax, when using expressions
-    other than simple constants for <TT
-CLASS="REPLACEABLE"
-><I
->start</I
-></TT
->
-    or <TT
-CLASS="REPLACEABLE"
-><I
->count</I
-></TT
->, parentheses will be
-    necessary in most cases.  If <TT
-CLASS="REPLACEABLE"
-><I
->count</I
-></TT
-> is
-    omitted in <TT
+    the effects of these clauses.
+    According to the standard, the <TT
+CLASS="LITERAL"
+>OFFSET</TT
+> clause must come
+    before the <TT
 CLASS="LITERAL"
 >FETCH</TT
->, it defaults to 1.
+> clause if both are present; but
+    <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> is laxer and allows either order.
    </P
 ><P
 >    When using <TT
@@ -3530,7 +3545,11 @@ ALIGN="LEFT"
 >    It is possible for a <TT
 CLASS="COMMAND"
 >SELECT</TT
-> command using <TT
+> command running at the <TT
+CLASS="LITERAL"
+>READ
+    COMMITTED</TT
+> transaction isolation level and using <TT
 CLASS="LITERAL"
 >ORDER
     BY</TT
@@ -3579,6 +3598,24 @@ CLASS="LITERAL"
     only if concurrent updates of the ordering columns are expected and a
     strictly sorted result is required.
    </P
+><P
+>    At the <TT
+CLASS="LITERAL"
+>REPEATABLE READ</TT
+> or <TT
+CLASS="LITERAL"
+>SERIALIZABLE</TT
+>
+    transaction isolation level this would cause a serialization failure (with
+    a <TT
+CLASS="LITERAL"
+>SQLSTATE</TT
+> of <TT
+CLASS="LITERAL"
+>'40001'</TT
+>), so there is
+    no possibility of receiving rows out of order under these isolation levels.
+   </P
 ></TD
 ></TR
 ></TABLE
@@ -3623,7 +3660,7 @@ CLASS="REPLACEABLE"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN75038"
+NAME="AEN75095"
 ></A
 ><H2
 >Examples</H2
@@ -3870,7 +3907,7 @@ HREF="queries-with.html"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN75072"
+NAME="AEN75129"
 ></A
 ><H2
 >Compatibility</H2
@@ -3885,7 +3922,7 @@ CLASS="COMMAND"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN75076"
+NAME="AEN75133"
 ></A
 ><H3
 >Omitted <TT
@@ -3945,7 +3982,7 @@ CLASS="LITERAL"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN75090"
+NAME="AEN75147"
 ></A
 ><H3
 >Omitting the <TT
@@ -3994,7 +4031,7 @@ CLASS="LITERAL"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN75102"
+NAME="AEN75159"
 ></A
 ><H3
 ><TT
@@ -4022,7 +4059,7 @@ CLASS="LITERAL"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN75109"
+NAME="AEN75166"
 ></A
 ><H3
 >Namespace Available to <TT
@@ -4076,7 +4113,7 @@ CLASS="LITERAL"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN75122"
+NAME="AEN75179"
 ></A
 ><H3
 >Functional Dependencies</H3
@@ -4100,7 +4137,7 @@ CLASS="LITERAL"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN75128"
+NAME="AEN75185"
 ></A
 ><H3
 ><TT
@@ -4125,7 +4162,7 @@ CLASS="PRODUCTNAME"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN75134"
+NAME="AEN75191"
 ></A
 ><H3
 ><TT
@@ -4183,7 +4220,7 @@ CLASS="LITERAL"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN75148"
+NAME="AEN75205"
 ></A
 ><H3
 ><TT
@@ -4226,7 +4263,7 @@ CLASS="LITERAL"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN75160"
+NAME="AEN75217"
 ></A
 ><H3
 >Data-Modifying Statements in <TT
@@ -4257,7 +4294,7 @@ CLASS="LITERAL"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN75169"
+NAME="AEN75226"
 ></A
 ><H3
 >Nonstandard Clauses</H3

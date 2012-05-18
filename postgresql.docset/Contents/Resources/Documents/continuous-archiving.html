@@ -9,7 +9,7 @@ CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REV="MADE"
 HREF="mailto:pgsql-docs@postgresql.org"><LINK
 REL="HOME"
-TITLE="PostgreSQL 9.1.1 Documentation"
+TITLE="PostgreSQL 9.1.3 Documentation"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="Backup and Restore"
@@ -26,7 +26,7 @@ HREF="stylesheet.css"><META
 HTTP-EQUIV="Content-Type"
 CONTENT="text/html; charset=ISO-8859-1"><META
 NAME="creation"
-CONTENT="2011-09-22T22:13:27"></HEAD
+CONTENT="2012-02-23T23:09:00"></HEAD
 ><BODY
 CLASS="SECT1"
 ><DIV
@@ -44,7 +44,7 @@ ALIGN="center"
 VALIGN="bottom"
 ><A
 HREF="index.html"
->PostgreSQL 9.1.1 Documentation</A
+>PostgreSQL 9.1.3 Documentation</A
 ></TH
 ></TR
 ><TR
@@ -63,9 +63,9 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="top"
 ><A
-TITLE="Backup and Restore"
 HREF="backup.html"
->Fast Backward</A
+ACCESSKEY="U"
+>Up</A
 ></TD
 ><TD
 WIDTH="60%"
@@ -73,16 +73,7 @@ ALIGN="center"
 VALIGN="bottom"
 >Chapter 24. Backup and Restore</TD
 ><TD
-WIDTH="10%"
-ALIGN="right"
-VALIGN="top"
-><A
-TITLE="Backup and Restore"
-HREF="backup.html"
->Fast Forward</A
-></TD
-><TD
-WIDTH="10%"
+WIDTH="20%"
 ALIGN="right"
 VALIGN="top"
 ><A
@@ -864,7 +855,26 @@ CLASS="FILENAME"
 >pg_xlog/</TT
 > is a symbolic link pointing to someplace outside
     the cluster directory, which is a common setup anyway for performance
-    reasons.
+    reasons.  You might also want to exclude <TT
+CLASS="FILENAME"
+>postmaster.pid</TT
+>
+    and <TT
+CLASS="FILENAME"
+>postmaster.opts</TT
+>, which record information
+    about the running <SPAN
+CLASS="APPLICATION"
+>postmaster</SPAN
+>, not about the
+    <SPAN
+CLASS="APPLICATION"
+>postmaster</SPAN
+> which will eventually use this backup.
+    (These files can confuse <SPAN
+CLASS="APPLICATION"
+>pg_ctl</SPAN
+>.)
    </P
 ><P
 >    To make use of the backup, you will need to keep all the WAL
@@ -1536,7 +1546,7 @@ CLASS="FILENAME"
 > entry looks very simple:
 </P><PRE
 CLASS="PROGRAMLISTING"
->archive_command = 'local_backup_script.sh'</PRE
+>archive_command = 'local_backup_script.sh "%p" "%f"'</PRE
 ><P>
       Using a separate script file is advisable any time you want to use
       more than a single command in the archiving process.

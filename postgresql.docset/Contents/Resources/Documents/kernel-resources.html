@@ -9,7 +9,7 @@ CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REV="MADE"
 HREF="mailto:pgsql-docs@postgresql.org"><LINK
 REL="HOME"
-TITLE="PostgreSQL 9.1.1 Documentation"
+TITLE="PostgreSQL 9.1.3 Documentation"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="Server Setup and Operation"
@@ -26,7 +26,7 @@ HREF="stylesheet.css"><META
 HTTP-EQUIV="Content-Type"
 CONTENT="text/html; charset=ISO-8859-1"><META
 NAME="creation"
-CONTENT="2011-09-22T22:13:27"></HEAD
+CONTENT="2012-02-23T23:09:00"></HEAD
 ><BODY
 CLASS="SECT1"
 ><DIV
@@ -44,7 +44,7 @@ ALIGN="center"
 VALIGN="bottom"
 ><A
 HREF="index.html"
->PostgreSQL 9.1.1 Documentation</A
+>PostgreSQL 9.1.3 Documentation</A
 ></TH
 ></TR
 ><TR
@@ -63,9 +63,9 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="top"
 ><A
-TITLE="Server Setup and Operation"
 HREF="runtime.html"
->Fast Backward</A
+ACCESSKEY="U"
+>Up</A
 ></TD
 ><TD
 WIDTH="60%"
@@ -73,16 +73,7 @@ ALIGN="center"
 VALIGN="bottom"
 >Chapter 17. Server Setup and Operation</TD
 ><TD
-WIDTH="10%"
-ALIGN="right"
-VALIGN="top"
-><A
-TITLE="Server Setup and Operation"
-HREF="runtime.html"
->Fast Forward</A
-></TD
-><TD
-WIDTH="10%"
+WIDTH="20%"
 ALIGN="right"
 VALIGN="top"
 ><A
@@ -756,10 +747,7 @@ CLASS="SYSTEMITEM"
 > versions before 4.0 work like
         <SPAN
 CLASS="SYSTEMITEM"
->NetBSD</SPAN
-> and <SPAN
-CLASS="SYSTEMITEM"
->        OpenBSD</SPAN
+>OpenBSD</SPAN
 > (see below).
        </P
 ></DD
@@ -767,7 +755,67 @@ CLASS="SYSTEMITEM"
 ><SPAN
 CLASS="SYSTEMITEM"
 >NetBSD</SPAN
-><BR><SPAN
+></DT
+><DD
+><P
+>        In <SPAN
+CLASS="SYSTEMITEM"
+>NetBSD</SPAN
+> 5.0 and later,
+        IPC parameters can be adjusted using <TT
+CLASS="COMMAND"
+>sysctl</TT
+>,
+        for example:
+</P><PRE
+CLASS="SCREEN"
+><SAMP
+CLASS="PROMPT"
+>$</SAMP
+> <KBD
+CLASS="USERINPUT"
+>sysctl -w kern.ipc.shmmax=16777216</KBD
+></PRE
+><P>
+        To have these settings persist over reboots, modify
+        <TT
+CLASS="FILENAME"
+>/etc/sysctl.conf</TT
+>.
+       </P
+><P
+>        You might also want to configure your kernel to lock shared
+        memory into RAM and prevent it from being paged out to swap.
+        This can be accomplished using the <TT
+CLASS="COMMAND"
+>sysctl</TT
+>
+        setting <TT
+CLASS="LITERAL"
+>kern.ipc.shm_use_phys</TT
+>.
+       </P
+><P
+>        <SPAN
+CLASS="SYSTEMITEM"
+>NetBSD</SPAN
+> versions before 5.0 work like
+        <SPAN
+CLASS="SYSTEMITEM"
+>OpenBSD</SPAN
+> (see below), except that
+        parameters should be set with the keyword <TT
+CLASS="LITERAL"
+>options</TT
+> not
+        <TT
+CLASS="LITERAL"
+>option</TT
+>.
+       </P
+></DD
+><DT
+><SPAN
 CLASS="SYSTEMITEM"
 >OpenBSD</SPAN
 ></DT
@@ -786,29 +834,18 @@ CLASS="VARNAME"
 CLASS="VARNAME"
 >SHMMAXPGS</TT
 > (in pages). The following
-        shows an example of how to set the various parameters on
-        <SPAN
-CLASS="SYSTEMITEM"
->NetBSD</SPAN
->
-        (<SPAN
-CLASS="SYSTEMITEM"
->OpenBSD</SPAN
-> uses <TT
-CLASS="LITERAL"
->option</TT
-> instead):
+        shows an example of how to set the various parameters:
 </P><PRE
 CLASS="PROGRAMLISTING"
->options        SYSVSHM
-options        SHMMAXPGS=4096
-options        SHMSEG=256
+>option        SYSVSHM
+option        SHMMAXPGS=4096
+option        SHMSEG=256
 
-options        SYSVSEM
-options        SEMMNI=256
-options        SEMMNS=512
-options        SEMMNU=256
-options        SEMMAP=256</PRE
+option        SYSVSEM
+option        SEMMNI=256
+option        SEMMNS=512
+option        SEMMNU=256
+option        SEMMAP=256</PRE
 ><P>
        </P
 ><P
@@ -1393,7 +1430,7 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="AEN25646"
+NAME="AEN25659"
 >17.4.2. Resource Limits</A
 ></H2
 ><P
@@ -1656,7 +1693,7 @@ CLASS="LITERAL"
 >-DLINUX_OOM_ADJ=0</TT
 > added to <TT
 CLASS="VARNAME"
->CFLAGS</TT
+>CPPFLAGS</TT
 >.
     That will cause postmaster child processes to run with the normal
     <TT
